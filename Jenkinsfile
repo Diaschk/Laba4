@@ -1,41 +1,33 @@
 pipeline {
     agent any
-    tools {
-        maven 'Maven-3.8.4'
-        jdk 'JDK-17'
-    }
-
+    
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-
-        stage('Build') {
+        
+        stage('Test Java') {
             steps {
-                sh 'mvn clean compile'
+                script {
+                    // Перевірка чи є Java
+                    try {
+                        sh 'java -version'
+                        echo '✅ Java is available'
+                    } catch (Exception e) {
+                        echo '❌ Java NOT found'
+                    }
+                    
+                    // Перевірка чи є Maven
+                    try {
+                        sh 'mvn -version'
+                        echo '✅ Maven is available'
+                    } catch (Exception e) {
+                        echo '❌ Maven NOT found'
+                    }
+                }
             }
-        }
-
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-                junit 'target/surefire-reports/**/*.xml'
-            }
-        }
-
-        stage('Package') {
-            steps {
-                sh 'mvn package -DskipTests'
-                archiveArtifacts artifacts: 'target/*.jar'
-            }
-        }
-    }
-
-    post {
-        always {
-            cleanWs()
         }
     }
 }

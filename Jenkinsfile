@@ -16,7 +16,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'mvn clean compile'
-                echo 'Build successful!'
+                echo '✅ Build successful!'
             }
         }
         
@@ -24,7 +24,25 @@ pipeline {
             steps {
                 sh 'mvn test'
                 junit 'target/surefire-reports/**/*.xml'
+                echo '✅ Tests completed!'
             }
+        }
+        
+        stage('Package') {
+            steps {
+                sh 'mvn package -DskipTests'
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                echo '✅ JAR file created!'
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo '🎉 Pipeline completed successfully!'
+        }
+        failure {
+            echo '❌ Pipeline failed!'
         }
     }
 }

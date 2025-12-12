@@ -21,10 +21,10 @@ pipeline {
         }
 
         // 🔽 КЛОНУЄМО РЕПОЗИТОРІЙ З GITHUB
-        stage('Checkout') {
+               stage('Checkout') {
             steps {
-              git branch: 'master',
-        url: 'https://github.com/Diaschk/Laba4.git'
+                git branch: 'master',
+                    url: 'https://github.com/Diaschk/Laba4.git'
             }
         }
 

@@ -4,7 +4,7 @@ pipeline {
     tools {
         // Указываем имя JDK из настроек Jenkins
         jdk 'JDK-11'
-        maven 'Maven-3.9.9'
+         maven 'Maven-3.8.4' 
     }
 
 

@@ -23,8 +23,8 @@ pipeline {
         // 🔽 КЛОНУЄМО РЕПОЗИТОРІЙ З GITHUB
         stage('Checkout') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/ТВОЙ_ЮЗЕР/ТВОЙ_РЕПО.git'
+              git branch: 'master',
+        url: 'https://github.com/Diaschk/Laba4.git'
             }
         }
 

@@ -14,10 +14,10 @@ pipeline {
         }
 
         stage('Checkout') {
-            steps {
-                //checkout scm
-            }
-        }
+    steps {
+        echo "ПРОПУСКАЕМ GIT ИЗ-ЗА ОШИБКИ"
+        // git url: 'https://github.com/...'  // закомментировано
+    }
 
         stage('Build') {
             steps {

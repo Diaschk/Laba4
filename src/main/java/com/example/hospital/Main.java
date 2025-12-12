@@ -12,16 +12,3 @@ public class Main {
     }
 }
 
-@RestController
-class HelloController {
-    
-    @GetMapping("/")
-    public String home() {
-        return "Вітаю! Госпітальний додаток запущено на AWS EC2!";
-    }
-    
-    @GetMapping("/test")
-    public String test() {
-        return "Тестова сторінка для лабораторної роботи №5";
-    }
-}

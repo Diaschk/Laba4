@@ -1,14 +1,30 @@
 pipeline {
     agent any
+
     tools {
         maven 'Maven-3.8.4'
         jdk 'JDK-17'
     }
 
+    // 🔄 ПЕРЕВІРЯЄ GITHUB КОЖНІ 2 ХВИЛИНИ
+    triggers {
+        pollSCM('H/2 * * * *')
+    }
+
     stages {
+
+        // 🧹 ОЧИЩАЄМО WORKSPACE ПЕРЕД ВСЕМ (виправляє твою помилку)
+        stage('Cleanup Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        // 🔽 КЛОНУЄМО РЕПОЗИТОРІЙ З GITHUB
         stage('Checkout') {
             steps {
-                checkout scm
+                git branch: 'main',
+                    url: 'https://github.com/ТВОЙ_ЮЗЕР/ТВОЙ_РЕПО.git'
             }
         }
 
@@ -33,6 +49,7 @@ pipeline {
         }
     }
 
+    // 🧹 очищення після завершення pipeline
     post {
         always {
             cleanWs()

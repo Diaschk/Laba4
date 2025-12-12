@@ -1,9 +1,9 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.8.4-openjdk-17'  // Всё уже настроено в контейнере
-            args '-v /root/.m2:/root/.m2'   // Кэш Maven
-        }
+      agent any  
+    
+    tools {
+        // Указываем имя JDK из настроек Jenkins
+        jdk 'JDK-11'
     }
 
 

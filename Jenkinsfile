@@ -2,27 +2,25 @@ pipeline {
       agent any  
     
     tools {
-        // Указываем имя JDK из настроек Jenkins
         jdk 'JDK-11'
          maven 'Maven-3.8.4' 
     }
 
 
-    // 🔄 ПЕРЕВІРЯЄ GITHUB КОЖНІ 2 ХВИЛИНИ
     triggers {
         pollSCM('H/2 * * * *')
     }
 
     stages {
 
-        // 🧹 ОЧИЩАЄМО WORKSPACE ПЕРЕД ВСЕМ (виправляє твою помилку)
+      
         stage('Cleanup Workspace') {
             steps {
                 cleanWs()
             }
         }
 
-        // 🔽 КЛОНУЄМО РЕПОЗИТОРІЙ З GITHUB
+        
                stage('Checkout') {
             steps {
                 git branch: 'master',
@@ -51,7 +49,7 @@ pipeline {
         }
     }
 
-    // 🧹 очищення після завершення pipeline
+ 
     post {
         always {
             cleanWs()

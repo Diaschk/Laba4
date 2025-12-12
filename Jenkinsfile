@@ -5,30 +5,10 @@ pipeline {
         jdk 'JDK-17'
     }
 
-
-    triggers {
-        pollSCM('H/2 * * * *')
-    }
-
     stages {
-        stage('Cleanup Workspace') {
+        stage('Checkout') {
             steps {
-                cleanWs()
-            }
-        }
-
-        stage('Checkout from GitHub') {
-            steps {
-
-                git branch: 'main',
-                    url: 'https://github.com/Diaschk/lab4.git'
-
-                sh '''
-
-                    ls -la
-
-                    git log --oneline -1
-                '''
+                checkout scm
             }
         }
 

@@ -7,7 +7,7 @@ pipeline {
     }
     
     environment {
-        DOCKER_IMAGE = 'dischk/my-java-app'  // Убедитесь что репозиторий с таким именем существует
+        DOCKER_IMAGE = 'diaschk/my-java-app'
         DOCKER_TAG = "${env.BUILD_ID}"
         DOCKER_REGISTRY = 'https://index.docker.io/v1/'
     }

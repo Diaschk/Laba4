@@ -50,11 +50,10 @@ pipeline {
             }
         }
         
-        // ВАЖНО: Docker должен быть установлен на агенте Jenkins!
+    
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Создаем Docker образ из Dockerfile
                     dockerImage = docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
                 }
             }
@@ -63,11 +62,9 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    // Авторизуемся в Docker Hub и пушим образ
-                    // 'docker-hub-token' - это ID credentials в Jenkins
                     docker.withRegistry(DOCKER_REGISTRY, 'docker-hub-token') {
-                        dockerImage.push()  // С тегом BUILD_ID
-                        dockerImage.push('latest')  // И с тегом latest
+                        dockerImage.push()  
+                        dockerImage.push('latest')  
                     }
                 }
             }
@@ -76,7 +73,6 @@ pipeline {
         stage('Cleanup Local Images') {
             steps {
                 script {
-                    // Удаляем собранный образ чтобы не засорять диск
                     sh "docker rmi ${DOCKER_IMAGE}:${DOCKER_TAG} || true"
                     sh "docker rmi ${DOCKER_IMAGE}:latest || true"
                     sh 'docker image prune -f'
@@ -90,12 +86,11 @@ pipeline {
             cleanWs()
         }
         success {
-            echo "✅ Pipeline успешно завершен!"
-            echo "📦 Образ доступен в Docker Hub: ${DOCKER_IMAGE}:${DOCKER_TAG}"
-            echo "🔗 Ссылка: https://hub.docker.com/r/dischk/my-java-app"
+            echo "Pipeline успешно завершен!"
+            echo "Образ доступен в Docker Hub: ${DOCKER_IMAGE}:${DOCKER_TAG}"
         }
         failure {
-            echo "❌ Pipeline завершился с ошибкой"
+            echo "Pipeline завершился с ошибкой"
         }
     }
 }

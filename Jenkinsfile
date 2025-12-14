@@ -6,9 +6,8 @@ pipeline {
         maven 'Maven-3.8.4' 
     }
     
-    // ← ДОБАВЬТЕ СЮДА environment ↓
     environment {
-        DOCKER_IMAGE = 'dischk/my-java-app'
+        DOCKER_IMAGE = 'dischk/my-java-app'  // Убедитесь что репозиторий с таким именем существует
         DOCKER_TAG = "${env.BUILD_ID}"
         DOCKER_REGISTRY = 'https://index.docker.io/v1/'
     }
@@ -51,12 +50,11 @@ pipeline {
             }
         }
         
-        // ← ДОБАВЬТЕ НОВЫЕ СТЕЙДЖИ ДЛЯ DOCKER ↓
-        
+        // ВАЖНО: Docker должен быть установлен на агенте Jenkins!
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Создаем Docker образ
+                    // Создаем Docker образ из Dockerfile
                     dockerImage = docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
                 }
             }
@@ -66,10 +64,10 @@ pipeline {
             steps {
                 script {
                     // Авторизуемся в Docker Hub и пушим образ
+                    // 'docker-hub-token' - это ID credentials в Jenkins
                     docker.withRegistry(DOCKER_REGISTRY, 'docker-hub-token') {
-                        dockerImage.push()
-                        // Также пушим с тегом latest
-                        dockerImage.push('latest')
+                        dockerImage.push()  // С тегом BUILD_ID
+                        dockerImage.push('latest')  // И с тегом latest
                     }
                 }
             }
@@ -78,7 +76,9 @@ pipeline {
         stage('Cleanup Local Images') {
             steps {
                 script {
-                    // Очищаем локальные образы чтобы не засорять диск
+                    // Удаляем собранный образ чтобы не засорять диск
+                    sh "docker rmi ${DOCKER_IMAGE}:${DOCKER_TAG} || true"
+                    sh "docker rmi ${DOCKER_IMAGE}:latest || true"
                     sh 'docker image prune -f'
                 }
             }
@@ -92,6 +92,7 @@ pipeline {
         success {
             echo "✅ Pipeline успешно завершен!"
             echo "📦 Образ доступен в Docker Hub: ${DOCKER_IMAGE}:${DOCKER_TAG}"
+            echo "🔗 Ссылка: https://hub.docker.com/r/dischk/my-java-app"
         }
         failure {
             echo "❌ Pipeline завершился с ошибкой"
